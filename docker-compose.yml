@@ -1,0 +1,43 @@
+version: "1.0"
+services:
+  customer:
+    container_name: customer
+    build: ./customer
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./customer/.env
+    volumes:
+      - .:/app
+      - /app/customer/node_modules
+  product:
+    container_name: product
+    build: ./product
+    ports:
+      - "8002:8002"
+    env_file:
+      - ./product/.env
+    volumes:
+      - .:/app
+      - /app/product/node_modules
+  shopping:
+    container_name: shopping
+    build: ./shopping
+    ports:
+      - "8003:8003"
+    env_file:
+      - ./shopping/.env
+    volumes:
+      - .:/app
+      - /app/shopping/node_modules
+  nginx:
+    container_name: proxy
+    build: ./proxy
+    ports:
+      - "8000:80"
+    volumes:
+      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - customer
+      - product
+      - shopping
